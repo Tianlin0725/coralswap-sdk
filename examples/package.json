@@ -1,0 +1,21 @@
+{
+  "name": "@coralswap/sdk-examples",
+  "version": "0.1.0",
+  "description": "Example scripts for CoralSwap SDK",
+  "private": true,
+  "scripts": {
+    "simple-swap": "ts-node simple-swap.ts",
+    "provide-liquidity": "ts-node provide-liquidity.ts",
+    "read-reserves": "ts-node read-reserves.ts"
+  },
+  "dependencies": {
+    "@coralswap/sdk": "file:..",
+    "@stellar/stellar-sdk": "^14.5.0",
+    "dotenv": "^16.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.6.0"
+  }
+}

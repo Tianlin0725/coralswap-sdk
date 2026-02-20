@@ -12,19 +12,21 @@
  * - Analyzing liquidity depth
  */
 
-import { CoralSwapClient, Network } from '@coralswap/sdk';
-import * as dotenv from 'dotenv';
+import { config } from 'dotenv';
+config();
 
-// Load environment variables
-dotenv.config();
+import {
+  CoralSwapClient,
+  Network,
+} from '../src';
 
 // Configuration from environment
-const RPC_URL = process.env.RPC_URL || 'https://soroban-testnet.stellar.org';
+const RPC_URL = process.env.RPC_URL;
 const NETWORK = (process.env.NETWORK as Network) || Network.TESTNET;
 
 // Token pair to query (example addresses)
-const TOKEN_A = process.env.TOKEN_A_ADDRESS || '';
-const TOKEN_B = process.env.TOKEN_B_ADDRESS || '';
+const TOKEN_A = process.env.TOKEN_A_ADDRESS;
+const TOKEN_B = process.env.TOKEN_B_ADDRESS;
 
 /**
  * Main function demonstrating reserve reading operations
@@ -33,10 +35,15 @@ async function main() {
   console.log('🔍 CoralSwap SDK - Read Reserves Example\n');
 
   // Initialize client (no secret key needed for read-only operations)
-  const client = new CoralSwapClient({
+  const clientConfig: any = {
     network: NETWORK,
-    rpcUrl: RPC_URL,
-  });
+  };
+
+  if (RPC_URL) {
+    clientConfig.rpcUrl = RPC_URL;
+  }
+
+  const client = new CoralSwapClient(clientConfig);
 
   // Check RPC health
   console.log('Checking RPC health...');
@@ -69,8 +76,8 @@ async function main() {
         console.log(`  ... and ${allPairs.length - 5} more`);
       }
     }
-  } catch (error) {
-    console.error('Error fetching pairs:', error);
+  } catch (error: any) {
+    console.error('Error fetching pairs:', error.message);
   }
   console.log('');
 
@@ -127,7 +134,7 @@ async function main() {
           console.log(`  Fee Range: ${feeState.feeMin} - ${feeState.feeMax} bps`);
           console.log(`  Baseline Fee: ${feeState.baselineFee} bps`);
           console.log(`  EMA Alpha: ${feeState.emaAlpha}`);
-        } catch (e) {
+        } catch (e: any) {
           console.log('  (Detailed fee state not available)');
         }
         console.log('');
@@ -139,7 +146,7 @@ async function main() {
           console.log(`  Flash Fee: ${flashConfig.flashFeeBps} bps`);
           console.log(`  Fee Floor: ${flashConfig.flashFeeFloor} bps`);
           console.log(`  Locked: ${flashConfig.locked ? 'Yes' : 'No'}`);
-        } catch (e) {
+        } catch (e: any) {
           console.log('  (Flash loan config not available)');
         }
         console.log('');
@@ -182,13 +189,13 @@ async function main() {
           console.log(`  Price 0 Cumulative: ${cumulativePrices.price0CumulativeLast}`);
           console.log(`  Price 1 Cumulative: ${cumulativePrices.price1CumulativeLast}`);
           console.log(`  Last Updated: ${new Date(cumulativePrices.blockTimestampLast * 1000).toISOString()}`);
-        } catch (e) {
+        } catch (e: any) {
           console.log('  (TWAP data not available)');
         }
         console.log('');
       }
-    } catch (error) {
-      console.error('Error querying pair:', error);
+    } catch (error: any) {
+      console.error('Error querying pair:', error.message);
     }
   }
 
@@ -209,8 +216,8 @@ async function main() {
 
           console.log(`[${timestamp}] Reserve0: ${reserves.reserve0}, Reserve1: ${reserves.reserve1}`);
         }
-      } catch (error) {
-        console.error(`Poll ${i + 1} failed:`, error);
+      } catch (error: any) {
+        console.error(`Poll ${i + 1} failed:`, error.message);
       }
 
       if (i < 2) {
